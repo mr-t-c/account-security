@@ -1,3 +1,6 @@
+let attempts = localStorage.getItem("attempts") || 0
+
+
 function login(){
 
 let email=document.getElementById("email").value
@@ -10,71 +13,65 @@ document.getElementById("msg").innerText="Enter valid email"
 return
 }
 
-if(password===""){
-document.getElementById("msg").innerText="Enter password"
+if(attempts>=3){
+document.getElementById("msg").innerText="Account locked due to multiple attempts"
 return
 }
 
+if(password==="1234"){
+
 localStorage.setItem("userEmail",email)
+localStorage.setItem("attempts",0)
 
 window.location="dashboard.html"
 
 }
 
+else{
+
+attempts++
+localStorage.setItem("attempts",attempts)
+
+document.getElementById("msg").innerText="Wrong password"
+
+}
+
+}
+
 
 function forgotPassword(){
+
 alert("Password reset link sent (Demo)")
+
+}
+
+
+function logout(){
+
+localStorage.clear()
+
+window.location="index.html"
+
 }
 
 
 if(window.location.pathname.includes("dashboard.html")){
 
 let email=localStorage.getItem("userEmail")
+
+if(!email){
+
+window.location="index.html"
+
+}
+
 document.getElementById("welcomeUser").innerText="Welcome "+email
 
 
-/* Simulated login scenarios */
-
-let scenarios=[
-
-{
-ip:"192.168.1.1",
-device:"Chrome Windows",
-location:"India",
-ipChange:0,
-deviceChange:0,
-locationChange:0,
-failedLogins:0,
-timeAnomaly:5
-},
-
-{
-ip:"10.21.11.4",
-device:"Android",
-location:"India",
-ipChange:20,
-deviceChange:15,
-locationChange:0,
-failedLogins:10,
-timeAnomaly:0
-},
-
-{
-ip:"182.44.22.1",
-device:"Unknown Device",
-location:"Russia",
-ipChange:20,
-deviceChange:15,
-locationChange:25,
-failedLogins:10,
-timeAnomaly:5
-}
-
-]
+let history=JSON.parse(localStorage.getItem("loginHistory"))||[]
 
 
-let scenario=scenarios[Math.floor(Math.random()*scenarios.length)]
-
+function processScenario(scenario){
 
 let riskScore=
 scenario.ipChange+
@@ -83,20 +80,13 @@ scenario.locationChange+
 scenario.failedLogins+
 scenario.timeAnomaly
 
-
 document.getElementById("riskScore").innerText=riskScore
 document.getElementById("failedCount").innerText=scenario.failedLogins
-
-
-document.getElementById("ipCell").innerText=scenario.ip
-document.getElementById("deviceCell").innerText=scenario.device
-document.getElementById("locationCell").innerText=scenario.location
-document.getElementById("timeCell").innerText=new Date().toLocaleTimeString()
-
 
 let threat=document.getElementById("threatLevel")
 let alerts=document.getElementById("alertsContainer")
 
+alerts.innerHTML=""
 
 if(riskScore<30){
 
@@ -133,35 +123,25 @@ let analysis=document.getElementById("analysisList")
 
 analysis.innerHTML=""
 
-/* IP analysis */
-
 if(scenario.ipChange===0)
 analysis.innerHTML+="<li>✔ IP matches previous login pattern</li>"
 else
 analysis.innerHTML+="<li>⚠ Unusual IP address detected</li>"
-
-/* Device analysis */
 
 if(scenario.deviceChange===0)
 analysis.innerHTML+="<li>✔ Recognized device</li>"
 else
 analysis.innerHTML+="<li>⚠ New device detected</li>"
 
-/* Location analysis */
-
 if(scenario.locationChange===0)
 analysis.innerHTML+="<li>✔ Normal login location</li>"
 else
 analysis.innerHTML+="<li>⚠ Suspicious geographic location</li>"
 
-/* Failed login analysis */
-
 if(scenario.failedLogins>0)
 analysis.innerHTML+="<li>⚠ Multiple failed login attempts</li>"
 else
 analysis.innerHTML+="<li>✔ No failed login attempts</li>"
-
-/* Time anomaly analysis */
 
 if(scenario.timeAnomaly>0)
 analysis.innerHTML+="<li>⚠ Login at unusual time detected</li>"
@@ -169,9 +149,49 @@ else
 analysis.innerHTML+="<li>✔ Login time within normal pattern</li>"
 
 document.getElementById("aiDecision").innerText=
-"AI Decision: Risk score generated using behavioral anomaly detection across IP, device, location, login time, and failed attempts."
+"AI Decision: Risk score generated using behavioral anomaly detection."
 
-/* Risk trend graph */
+history.push({
+ip:scenario.ip,
+device:scenario.device,
+location:scenario.location,
+time:new Date().toLocaleTimeString(),
+risk:riskScore
+})
+
+localStorage.setItem("loginHistory",JSON.stringify(history))
+
+updateTable()
+
+drawGraphs(scenario,riskScore)
+
+}
+
+
+function updateTable(){
+
+let table=document.getElementById("loginTable")
+
+table.innerHTML=""
+
+history.slice().reverse().forEach(item=>{
+
+table.innerHTML+=`
+<tr>
+<td>${item.ip}</td>
+<td>${item.device}</td>
+<td>${item.location}</td>
+<td>${item.time}</td>
+<td>${item.risk}</td>
+</tr>
+`
+
+})
+
+}
+
+
+function drawGraphs(scenario,riskScore){
 
 new Chart(document.getElementById("riskTrend"),{
 
@@ -187,10 +207,6 @@ borderWidth:2
 }
 
 })
-
-
-
-/* Risk breakdown */
 
 new Chart(document.getElementById("riskBreakdown"),{
 
@@ -211,5 +227,62 @@ scenario.timeAnomaly
 }
 
 })
+
+}
+
+
+window.simulateNormal=function(){
+
+processScenario({
+
+ip:"192.168.1.1",
+device:"Chrome Windows",
+location:"India",
+ipChange:0,
+deviceChange:0,
+locationChange:0,
+failedLogins:0,
+timeAnomaly:5
+
+})
+
+}
+
+
+window.simulateSuspicious=function(){
+
+processScenario({
+
+ip:"10.21.11.4",
+device:"Android",
+location:"India",
+ipChange:20,
+deviceChange:15,
+locationChange:0,
+failedLogins:10,
+timeAnomaly:0
+
+})
+
+}
+
+
+window.simulateAttack=function(){
+
+processScenario({
+
+ip:"182.44.22.1",
+device:"Unknown Device",
+location:"Russia",
+ipChange:20,
+deviceChange:15,
+locationChange:25,
+failedLogins:10,
+timeAnomaly:5
+
+})
+
+}
+
 
 }

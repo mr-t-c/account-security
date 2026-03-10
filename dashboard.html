@@ -17,7 +17,10 @@
 
 <h2>AI Account Security Dashboard</h2>
 
+<div>
 <p id="welcomeUser"></p>
+<button onclick="logout()">Logout</button>
+</div>
 
 </div>
 
@@ -44,6 +47,15 @@
 </div>
 
 
+<div class="simulation">
+
+<button onclick="simulateNormal()">Simulate Normal Login</button>
+<button onclick="simulateSuspicious()">Simulate Suspicious Login</button>
+<button onclick="simulateAttack()">Simulate Attack</button>
+
+</div>
+
+
 <div class="threat-level" id="threatLevel">
 Threat Level
 </div>
@@ -55,23 +67,22 @@ Threat Level
 
 <table>
 
+<thead>
 <tr>
 <th>IP</th>
 <th>Device</th>
 <th>Location</th>
 <th>Time</th>
+<th>Risk</th>
 </tr>
+</thead>
 
-<tr>
-<td id="ipCell"></td>
-<td id="deviceCell"></td>
-<td id="locationCell"></td>
-<td id="timeCell"></td>
-</tr>
+<tbody id="loginTable"></tbody>
 
 </table>
 
 </div>
+
 
 <div class="ai-analysis">
 
@@ -82,6 +93,7 @@ Threat Level
 <p id="aiDecision"></p>
 
 </div>
+
 
 <div class="graph-container">
 
