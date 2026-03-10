@@ -9,3 +9,9 @@ This project simulates a behavior-based login security system that detects suspi
 - Unusual login time
 
 The system visualizes risk analysis using an interactive dashboard.
+
+
+
+
+
+localStorage.clear()
