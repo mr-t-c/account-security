@@ -124,9 +124,9 @@ let analysis=document.getElementById("analysisList")
 analysis.innerHTML=""
 
 if(scenario.ipChange===0)
-analysis.innerHTML+="<li>✔ IP matches previous login pattern</li>"
+analysis.innerHTML+="<li><i class='fas fa-check'></i> IP matches previous login pattern</li>"
 else
-analysis.innerHTML+="<li>⚠ Unusual IP address detected</li>"
+analysis.innerHTML+="<li><i class='fas fa-exclamation-triangle'></i> Unusual IP address detected</li>"
 
 if(scenario.deviceChange===0)
 analysis.innerHTML+="<li>✔ Recognized device</li>"
