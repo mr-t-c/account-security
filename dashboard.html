@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>AI Security Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<h2>AI Account Security Dashboard</h2>
+
+<p id="welcomeUser"></p>
+
+</div>
+
+
+<div class="dashboard">
+
+<div class="cards">
+
+<div class="card">
+<h3>Risk Score</h3>
+<p id="riskScore">0</p>
+</div>
+
+<div class="card">
+<h3>Alerts</h3>
+<p id="alertCount">0</p>
+</div>
+
+<div class="card">
+<h3>Failed Logins</h3>
+<p id="failedCount">0</p>
+</div>
+
+</div>
+
+
+<div class="threat-level" id="threatLevel">
+Threat Level
+</div>
+
+
+<div class="table-section">
+
+<h3>Recent Login Activity</h3>
+
+<table>
+
+<tr>
+<th>IP</th>
+<th>Device</th>
+<th>Location</th>
+<th>Time</th>
+</tr>
+
+<tr>
+<td id="ipCell"></td>
+<td id="deviceCell"></td>
+<td id="locationCell"></td>
+<td id="timeCell"></td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="ai-analysis">
+
+<h3>AI Security Analysis</h3>
+
+<ul id="analysisList"></ul>
+
+<p id="aiDecision"></p>
+
+</div>
+
+<div class="graph-container">
+
+<div class="graph-box">
+
+<h3>Risk Trend</h3>
+
+<canvas id="riskTrend"></canvas>
+
+</div>
+
+
+<div class="graph-box">
+
+<h3>Risk Breakdown</h3>
+
+<canvas id="riskBreakdown"></canvas>
+
+</div>
+
+</div>
+
+
+<div class="alerts">
+
+<h3>Security Alerts</h3>
+
+<div id="alertsContainer"></div>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
